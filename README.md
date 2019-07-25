@@ -28,7 +28,9 @@ x = CuDNNLSTM(attention_dim, return_sequences=True)(embedding)
 #simple decoder with attention
 input_decoder = Input(shape=(None, 26))  
 processed_decoder = Dense(attention_dim, activation='relu')(input_decoder)
+
 attention_layer = LocationSensitiveAttentionLayer(units=attention_dim, filters=16)
+
 context, weights = attention_layer([x, processed_decoder], verbose=True) #verbose is to see the different shape during the attention mechanism
 
 out = Concatenate()([context, processed_decoder])
@@ -36,6 +38,7 @@ out = Concatenate()([context, processed_decoder])
 out = Dense(26, activation='softmax')(out)
 
 full_model = Model([input_encoder, input_decoder], out)
+
 #full_model = Model([input_encoder, input_decoder], [out, weights]) to see get the attention_weights 
 
 
