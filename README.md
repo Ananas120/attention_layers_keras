@@ -22,11 +22,15 @@ attention_dim = 128
 
 #simple encoder
 input_encoder = Input(shape=(None,))
+
 embedding = Embedding(input_dim=26, output_dim=32)(input_encoder)
+
 x = CuDNNLSTM(attention_dim, return_sequences=True)(embedding)
 
 #simple decoder with attention
+
 input_decoder = Input(shape=(None, 26))  
+
 processed_decoder = Dense(attention_dim, activation='relu')(input_decoder)
 
 attention_layer = LocationSensitiveAttentionLayer(units=attention_dim, filters=16)
@@ -45,7 +49,9 @@ full_model = Model([input_encoder, input_decoder], out)
 full_model.summary(150)
 
 i1 = np.ones((1, 26))
+
 i2 = np.ones((1, 4, 26))
 
 full_model.compile(loss='mse', optimizer='adam')
+
 full_model.predict([i1, i2])
